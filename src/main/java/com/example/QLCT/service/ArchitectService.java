@@ -27,16 +27,4 @@ public class ArchitectService {
 		return archRepo.save(archForm);
 	}
 	
-//	public Architect updateArchitect(Integer id, Architect form) {
-//		Architect architect = archRepo.findById(id).get();
-//		architect.setName(form.getName());
-//		architect.setAddress(form.getAddress());
-//	    return archRepo.save(architect);
-//	}
-	
-//	public void updateCustomerContacts(long id, String phone) {
-//	    Customer myCustomer = repo.findById(id);
-//	    myCustomer.phone = phone;
-//	    repo.save(myCustomer);
-//	}
 }

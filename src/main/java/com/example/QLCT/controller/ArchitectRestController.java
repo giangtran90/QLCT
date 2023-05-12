@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,9 +42,9 @@ public class ArchitectRestController {
 		return "success";
 	}
 	
-//	@PutMapping(path = "/edit/{param}")
-//	public @ResponseBody String updateArchitect(@RequestBody Architect architect) {
-//		architectService.;
-//		return "success";
-//	}
+	@PatchMapping(path = "/add")
+	public @ResponseBody String updateArchitect(@RequestBody Architect architect) {
+		architectService.addNewArchitect(architect);
+		return "update success";
+	}
 }
