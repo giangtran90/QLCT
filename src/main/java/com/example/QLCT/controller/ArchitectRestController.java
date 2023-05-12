@@ -38,13 +38,14 @@ public class ArchitectRestController {
 	
 	@PostMapping(path = "/add")
 	public @ResponseBody String addNewArchitect(@RequestBody Architect architect) {
-		architectService.addNewArchitect(architect);
+		architectService.saveArchitect(architect);
 		return "success";
 	}
 	
-	@PatchMapping(path = "/add")
+	@PatchMapping(path = "/all")
 	public @ResponseBody String updateArchitect(@RequestBody Architect architect) {
-		architectService.addNewArchitect(architect);
+		architectService.saveArchitect(architect);
 		return "update success";
 	}
+	
 }

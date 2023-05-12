@@ -15,15 +15,18 @@ public class ArchitectService {
 
 	private final ArchitectRepository archRepo;
 	
+	// get by id
 	public Optional<Architect> getArchitectById(Integer id){
 		return archRepo.findById(id);
 	}
 	
+	// get all list
 	public Iterable<Architect> getAllArchitects() {
 		return archRepo.findAll();
 	}
 	
-	public Architect addNewArchitect(Architect archForm) {
+	// update and save
+	public Architect saveArchitect(Architect archForm) {
 		return archRepo.save(archForm);
 	}
 	
