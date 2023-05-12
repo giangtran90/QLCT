@@ -16,18 +16,27 @@ public class ArchitectService {
 	private final ArchitectRepository archRepo;
 	
 	// get by id
-	public Optional<Architect> getArchitectById(Integer id){
+	public Optional<Architect> getById(Integer id){
 		return archRepo.findById(id);
 	}
 	
 	// get all list
-	public Iterable<Architect> getAllArchitects() {
+	public Iterable<Architect> getAll() {
 		return archRepo.findAll();
 	}
 	
-	// update and save
-	public Architect saveArchitect(Architect archForm) {
+	// save
+	public Architect save(Architect archForm) {
 		return archRepo.save(archForm);
 	}
 	
+	// update
+	public Architect update(Architect archForm) {
+		return archRepo.save(archForm);
+	}
+	
+	// delete
+	public void delete(int id) {
+		archRepo.deleteById(id);;
+	}
 }
