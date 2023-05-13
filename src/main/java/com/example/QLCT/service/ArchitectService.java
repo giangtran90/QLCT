@@ -2,6 +2,7 @@ package com.example.QLCT.service;
 
 import java.util.Optional;
 
+import org.hibernate.ResourceClosedException;
 import org.springframework.stereotype.Service;
 
 import com.example.QLCT.entity.Architect;
@@ -16,8 +17,13 @@ public class ArchitectService {
 	private final ArchitectRepository archRepo;
 	
 	// get by id
-	public Optional<Architect> getById(Integer id){
-		return archRepo.findById(id);
+	public Architect getById(Integer id){
+		Optional<Architect> result = archRepo.findById(id);
+		if(result.isPresent()) {
+			return result.get();
+		}else {
+			throw new ResourceClosedException("Error");
+		}
 	}
 	
 	// get all list
