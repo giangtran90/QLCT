@@ -2,6 +2,8 @@ package com.example.QLCT.service;
 
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.hibernate.ResourceClosedException;
 import org.springframework.stereotype.Service;
 
@@ -31,14 +33,20 @@ public class ArchitectService {
 		return archRepo.findAll();
 	}
 	
-	// save
-	public Architect save(Architect archForm) {
-		return archRepo.save(archForm);
+	// create
+	public Architect create(Architect architect) {
+		return archRepo.save(architect);
 	}
 	
 	// update
-	public Architect update(Architect archForm) {
-		return archRepo.save(archForm);
+	public Architect update(int id, Architect architectRequest) {
+		Architect architect = archRepo.findById(id).orElseThrow(()->new EntityNotFoundException());
+		architect.setName(architectRequest.getName());
+		architect.setBirthday(architectRequest.getBirthday());
+		architect.setSex(architectRequest.getSex());
+		architect.setPlace(architectRequest.getPlace());
+		architect.setAddress(architectRequest.getAddress());
+		return archRepo.save(architect);
 	}
 	
 	// delete

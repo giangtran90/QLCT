@@ -11,6 +11,8 @@ public class ArchitectDto {
 
 	private Integer id;
 	private String name;
+	private Integer birthday;
+	private Integer sex;
 	private String place;
 	private String address;
 }

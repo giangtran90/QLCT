@@ -4,7 +4,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class ArchitectController {
 
 	private final ModelMapper modelMapper;
-	
+
 	private final ArchitectService architectService;
 
 	@GetMapping(path = "/all")
@@ -37,28 +36,44 @@ public class ArchitectController {
 		// @ResponseBody means the returned String is the response, not a view name
 		// @RequestParam means it is a parameter from the GET or POST request
 		Iterable<Architect> architects = architectService.getAll();
-		return StreamSupport.stream(architects.spliterator(), false).map(art -> modelMapper.map(art,ArchitectDto.class )).collect(Collectors.toList());
+		return StreamSupport.stream(architects.spliterator(), false)
+				.map(art -> modelMapper.map(art, ArchitectDto.class)).collect(Collectors.toList());
 	}
 
 	@GetMapping(path = "/{id}")
-	public ResponseEntity<ArchitectDto> getById(@PathVariable("id") int id){
-		Architect architect = architectService.getById(id);
-		ArchitectDto archReponse = modelMapper.map(architect, ArchitectDto.class);
-		return ResponseEntity.ok().body(archReponse);
+	public @ResponseBody ArchitectDto getById(@PathVariable("id") int id) {
+		Architect architect 		= architectService.getById(id);
+		ArchitectDto archReponse 	= modelMapper.map(architect, ArchitectDto.class);
+		return archReponse;
 	}
-	
+
 	@PostMapping()
-	public @ResponseBody String add(@RequestBody @NonNull Architect architect) {
-		Architect arch = architectService.save(architect);
-		return "created success with id: " + arch.getId();
+	public @ResponseBody ArchitectDto create(@RequestBody @NonNull ArchitectDto architectDto) {
+
+		// convert DTO to entity
+		Architect architectRequest 	= modelMapper.map(architectDto, Architect.class);
+		Architect architect 		= architectService.create(architectRequest);
+
+		// convert entity to DTO
+		ArchitectDto architectResponse = modelMapper.map(architect, ArchitectDto.class);
+
+		return architectResponse;
 	}
-	
+
 	@PutMapping(path = "/{id}")
-	public @ResponseBody void update(@PathVariable("id") int id, @RequestBody @NonNull Architect architect) {
-		architect.setId(id);
-		architectService.update(architect);
+	public @ResponseBody ArchitectDto update(@PathVariable("id") int id,
+			@RequestBody @NonNull ArchitectDto architectDto) {
+
+		// convert DTO to entity
+		Architect architectRequest 	= modelMapper.map(architectDto, Architect.class);
+		Architect architect 		= architectService.update(id, architectRequest);
+
+		// convert entity to DTO
+		ArchitectDto architectResponse = modelMapper.map(architect, ArchitectDto.class);
+		
+		return architectResponse;
 	}
-	
+
 	@DeleteMapping(path = "/{id}")
 	public @ResponseBody void delete(@PathVariable("id") int id) {
 		architectService.delete(id);
