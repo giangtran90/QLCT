@@ -1,6 +1,7 @@
 package com.example.QLCT.service;
 
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -8,6 +9,8 @@ import org.hibernate.ResourceClosedException;
 import org.springframework.stereotype.Service;
 
 import com.example.QLCT.entity.Architect;
+import com.example.QLCT.entityDto.ArchitectDto;
+import com.example.QLCT.mapper.ArchitectMapper;
 import com.example.QLCT.repository.ArchitectRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -17,40 +20,53 @@ import lombok.RequiredArgsConstructor;
 public class ArchitectService {
 
 	private final ArchitectRepository archRepo;
-	
+
 	// get by id
-	public Architect getById(Integer id){
+	public ArchitectDto getById(Integer id) {
 		Optional<Architect> result = archRepo.findById(id);
-		if(result.isPresent()) {
-			return result.get();
-		}else {
+		ArchitectMapper mapper = new ArchitectMapper();
+		if (result.isPresent()) {
+			return mapper.toArchitectDto(result.get());
+		} else {
 			throw new ResourceClosedException("Error");
 		}
 	}
-	
+
 	// get all list
-	public Iterable<Architect> getAll() {
-		return archRepo.findAll();
+	public Iterable<ArchitectDto> getAll() {
+		Iterable<Architect> architects = archRepo.findAll();
+		ArchitectMapper mapper = new ArchitectMapper();
+		return StreamSupport.stream(architects.spliterator(), false).map(mapper::toArchitectDto).toList();
 	}
-	
+
 	// create
-	public Architect create(Architect architect) {
-		return archRepo.save(architect);
+	public ArchitectDto create(ArchitectDto architectDto) {
+		ArchitectMapper mapper = new ArchitectMapper();
+		// convert entity from DTO
+		Architect architect = mapper.toArchitect(architectDto);
+		// convert DTO from entity
+		ArchitectDto archResponse = mapper.toArchitectDto(archRepo.save(architect));
+		return archResponse;
 	}
-	
+
 	// update
-	public Architect update(int id, Architect architectRequest) {
-		Architect architect = archRepo.findById(id).orElseThrow(()->new EntityNotFoundException());
+	public ArchitectDto update(int id, ArchitectDto architectDto) {
+		ArchitectMapper mapper = new ArchitectMapper();
+		// convert entity from DTO 
+		Architect architectRequest = mapper.toArchitect(architectDto);
+		Architect architect = archRepo.findById(id).orElseThrow(() -> new EntityNotFoundException());
 		architect.setName(architectRequest.getName());
 		architect.setBirthday(architectRequest.getBirthday());
 		architect.setSex(architectRequest.getSex());
 		architect.setPlace(architectRequest.getPlace());
 		architect.setAddress(architectRequest.getAddress());
-		return archRepo.save(architect);
+
+		return mapper.toArchitectDto(archRepo.save(architect));
 	}
-	
+
 	// delete
 	public void delete(int id) {
-		archRepo.deleteById(id);;
+		archRepo.deleteById(id);
+		;
 	}
 }
