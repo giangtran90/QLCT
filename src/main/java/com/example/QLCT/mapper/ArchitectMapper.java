@@ -20,7 +20,7 @@ public class ArchitectMapper {
 	public Architect toArchitect(ArchitectDto architectDto) {
         Architect architect = new Architect();
         architect.setId(architectDto.getId());
-        architect.setName("sdfsdfsdf");
+        architect.setName(architectDto.getName());
         architect.setBirthday(architectDto.getBirthday());
         architect.setSex(architectDto.getSex());
         architect.setPlace(architectDto.getPlace());
