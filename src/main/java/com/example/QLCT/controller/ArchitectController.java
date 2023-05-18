@@ -50,7 +50,8 @@ public class ArchitectController {
 	}
 
 	@DeleteMapping(path = "/{id}")
-	public @ResponseBody void delete(@PathVariable("id") int id) {
+	public @ResponseBody String delete(@PathVariable("id") int id) {
 		architectService.delete(id);
+		return "Architect with id " + id + " has been deleted success";
 	}
 }

@@ -3,13 +3,11 @@ package com.example.QLCT.service;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
-import javax.persistence.EntityNotFoundException;
-
-import org.hibernate.ResourceClosedException;
 import org.springframework.stereotype.Service;
 
 import com.example.QLCT.entity.Architect;
 import com.example.QLCT.entityDto.ArchitectDto;
+import com.example.QLCT.exception.ArchitectNotFoundException;
 import com.example.QLCT.mapper.ArchitectMapper;
 import com.example.QLCT.repository.ArchitectRepository;
 
@@ -28,7 +26,7 @@ public class ArchitectService {
 		if (result.isPresent()) {
 			return mapper.toArchitectDto(result.get());
 		} else {
-			throw new ResourceClosedException("Error");
+			throw new ArchitectNotFoundException(id);
 		}
 	}
 
@@ -54,7 +52,7 @@ public class ArchitectService {
 		ArchitectMapper mapper = new ArchitectMapper();
 		// convert entity from DTO 
 		Architect architectRequest = mapper.toArchitect(architectDto);
-		Architect architect = archRepo.findById(id).orElseThrow(() -> new EntityNotFoundException());
+		Architect architect = archRepo.findById(id).orElseThrow(() -> new ArchitectNotFoundException(id));
 		architect.setName(architectRequest.getName());
 		architect.setBirthday(architectRequest.getBirthday());
 		architect.setSex(architectRequest.getSex());
@@ -66,7 +64,9 @@ public class ArchitectService {
 
 	// delete
 	public void delete(int id) {
+		if (!archRepo.existsById(id)) {
+			throw new ArchitectNotFoundException(id);
+		}
 		archRepo.deleteById(id);
-		;
 	}
 }
